@@ -206,6 +206,36 @@ if usingVorp then
         character.removeCurrency(currency, amount)
         return true
     end
+    MBLFunctions["addMoney"] = function(source, amount)
+        local user = VorpCore.getUser(source) --[[@as User]]  
+        if not user then return end -- is player in session?
+        local character = user.getUsedCharacter --[[@as Character]]
+        --The currency type (0 = money, 1 = gold, 2 = rol)
+        character.addCurrency(0, amount)
+    end
+    MBLFunctions["removeMoney"] = function(source, amount)
+        local user = VorpCore.getUser(source) --[[@as User]]  
+        if not user then return end -- is player in session?
+        local character = user.getUsedCharacter --[[@as Character]]
+        --The currency type (0 = money, 1 = gold, 2 = rol)
+        character.removeCurrency(0, amount)
+    end
+    MBLFunctions["addGold"] = function(source, amount)
+        local user = VorpCore.getUser(source) --[[@as User]]  
+        if not user then return end -- is player in session?
+        local character = user.getUsedCharacter --[[@as Character]]
+        --The currency type (0 = money, 1 = gold, 2 = rol)
+        character.addCurrency(1, amount)
+        return true
+    end
+    MBLFunctions["removeGold"] = function(source, amount)
+        local user = VorpCore.getUser(source) --[[@as User]]  
+        if not user then return end -- is player in session?
+        local character = user.getUsedCharacter --[[@as Character]]
+        --The currency type (0 = money, 1 = gold, 2 = rol)
+        character.removeCurrency(1, amount)
+        return true
+    end
 end
 local usingRSG = GetResourceState("rsg-core") == "started"
 if usingRSG then
@@ -356,6 +386,22 @@ if usingRSG then
         local player = RSGCore.Functions.GetPlayer(source)
         currency = currency == 0 and "cash" or currency == 1 and "bank" or "black_money"
         return player.Functions.RemoveMoney(currency, amount)
+    end
+    MBLFunctions["addMoney"] = function(source, amount)
+        local player = RSGCore.Functions.GetPlayer(source)
+        return player.Functions.AddMoney("cash", amount)
+    end
+    MBLFunctions["removeMoney"] = function(source, amount)
+        local player = RSGCore.Functions.GetPlayer(source)
+        return player.Functions.RemoveMoney("cash", amount)
+    end
+    MBLFunctions["addGold"] = function(source, amount)
+        local player = RSGCore.Functions.GetPlayer(source)
+        return player.Functions.AddMoney("bank", amount)
+    end
+    MBLFunctions["removeGold"] = function(source, amount)
+        local player = RSGCore.Functions.GetPlayer(source)
+        return player.Functions.RemoveMoney("bank", amount)
     end
 end 
 
