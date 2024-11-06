@@ -7,7 +7,6 @@ if vorpDedected then
     MBLFunctions["notify"] = function(text, duration)
         return VorpCore.NotifyTip(text, duration)
     end
-    return
 end
 local rsgDedected = GetResourceState('rsg-core') == 'started'
 if rsgDedected then
@@ -16,7 +15,6 @@ if rsgDedected then
     MBLFunctions["notify"] = function(text,duration)
         return lib.notify({ title = "Notification", description = text, type = 'inform' })
     end
-    return
 end
 
 exports("MBLFunctions", function()
