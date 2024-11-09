@@ -88,6 +88,12 @@ if usingVorp then
         local character = user.getUsedCharacter --[[@as Character]]
         return character.job
     end
+    MBLFunctions["getJobLabel"] = function(source)
+        local user = VorpCore.getUser(source) --[[@as User]]  
+        if not user then return end -- is player in session?
+        local character = user.getUsedCharacter --[[@as Character]]
+        return character.jobLabel
+    end
     --@jobgrade
     MBLFunctions["getJobGrade"] = function(source)
         local user = VorpCore.getUser(source) --[[@as User]]  
@@ -164,9 +170,10 @@ if usingVorp then
         if not user then return end -- is player in session?
         local character = user.getUsedCharacter --[[@as Character]]
         if grade then
+            character.setJob(job, false)
             character.setJobGrade(grade, false)
         end
-        return character.setJob(job, false)
+        return true
     end
     --SetJobGrade
     MBLFunctions["setJobGrade"] = function(source, grade)
@@ -305,6 +312,10 @@ if usingRSG then
     MBLFunctions["getJob"] = function(source)
         local player = RSGCore.Functions.GetPlayer(source)
         return player.PlayerData.job.name
+    end
+    MBLFunctions["getJobLabel"] = function(source)
+        local player = RSGCore.Functions.GetPlayer(source)
+        return player.PlayerData.job.label
     end
     MBLFunctions["getJobGrade"] = function(source)
         local player = RSGCore.Functions.GetPlayer(source)

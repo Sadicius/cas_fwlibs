@@ -1,6 +1,7 @@
 MBLFunctions = {}
 -- things that are not in the default lua libraries
 local vorpDedected = GetResourceState('vorp_core') == 'started'
+print(vorpDedected)
 print("Vorp: " .. tostring(vorpDedected))
 if vorpDedected then
     VorpCore = exports.vorp_core:GetCore()
