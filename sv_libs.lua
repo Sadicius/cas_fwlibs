@@ -70,8 +70,6 @@ if usingVorp then
         return character
     end
     MBLFunctions["getIdentifier"] = function(source)
-        print("getidentifeir libs")
-        print(source, "libs source")
         local user = VorpCore.getUser(source) --[[@as User]]  
         if not user then return end -- is player in session?
         local character = user.getUsedCharacter --[[@as Character]]
