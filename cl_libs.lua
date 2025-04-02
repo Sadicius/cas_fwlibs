@@ -1,23 +1,28 @@
 MBLFunctions = {}
+CASFWlibsClientLoaded = false
 -- things that are not in the default lua libraries
-local vorpDedected = GetResourceState('vorp_core') == 'started'
-print(vorpDedected)
-print("Vorp: " .. tostring(vorpDedected))
-if vorpDedected then
-    VorpCore = exports.vorp_core:GetCore()
-    MBLFunctions["notify"] = function(text, duration)
-        return VorpCore.NotifyTip(text, duration)
+CreateThread(function()
+    local vorpDedected = GetResourceState('vorp_core') == 'started'
+    print("Vorp: " .. tostring(vorpDedected))
+    if vorpDedected then
+        VorpCore = exports.vorp_core:GetCore()
+        MBLFunctions["notify"] = function(text, duration)
+            return VorpCore.NotifyTip(text, duration)
+        end
+        CASFWlibsClientLoaded = true
     end
-end
-local rsgDedected = GetResourceState('rsg-core') == 'started'
-if rsgDedected then
-    print("RSG: " .. tostring(rsgDedected))
-    RSGCore = exports['rsg-core']:GetCoreObject()
-    MBLFunctions["notify"] = function(text,duration)
-        return lib.notify({ title = "Notification", description = text, type = 'inform' })
+    local rsgDedected = GetResourceState('rsg-core') == 'started'
+    if rsgDedected then
+        print("RSG: " .. tostring(rsgDedected))
+        RSGCore = exports['rsg-core']:GetCoreObject()
+        MBLFunctions["notify"] = function(text,duration)
+            return lib.notify({ title = "Notification", description = text, type = 'inform' })
+        end
+        CASFWlibsClientLoaded = true
     end
-end
+end)
 
 exports("MBLFunctions", function()
+    while not CASFWlibsClientLoaded do Wait(0) end
     return MBLFunctions
 end)
