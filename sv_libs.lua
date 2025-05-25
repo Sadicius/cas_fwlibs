@@ -357,7 +357,255 @@ if usingRSG then
     CASFWLibs = true
 end 
 
+local usingTPZCore = GetResourceState("tpz_core") == "started"
+print("^5 [Code After S*x FW Libs] | ^0 TPZ-CORE: " .. tostring(usingTPZCore))
 
+if usingTPZCore then
+
+    TPZ = exports.tpz_core:getCoreAPI()
+
+    MBLFunctions["getMoney"] = function(source)
+        local xPlayer = TPZ.GetPlayer(source)
+
+        if not xPlayer.loaded() then return end
+        return xPlayer.getAccount(0)
+    end
+    
+    MBLFunctions["AddItem"] = function(source, item, amount) 
+        local xPlayer = TPZ.GetPlayer(source)
+        return xPlayer.addItem(item, amount) -- extra parameter to use metadata after amount is also available.
+    end
+
+    MBLFunctions["RemoveItem"] = function(source, item, amount)
+        local xPlayer = TPZ.GetPlayer(source)
+
+        return xPlayer.removeItem(item, amount)
+    end
+
+    MBLFunctions["addWeapon"] = function(source, weapon, ammo, components, comps)
+
+        if not weapon then print("Weapon name is required") return false end
+
+        local metadata = nil
+
+        if ammo then
+            metadata = {}
+            metadata.ammo = ammo
+        end
+
+        if components then
+            metadata.components = components
+        end
+
+        local xPlayer = TPZ.GetPlayer(source)
+        xPlayer.addWeapon(weapon, weaponId, metadata)
+        return true
+    end
+
+    MBLFunctions["removeWeapon"] = function(source, weaponId)
+        local xPlayer = TPZ.GetPlayer(source)
+        xPlayer.removeWeaponById(weaponId)
+    end
+
+    MBLFunctions["canCarryItem"] = function(source, item, count)
+        local xPlayer      = TPZ.GetPlayer(source)
+        local canCarryItem = xPlayer.canCarryItem(source, item, count)
+
+        return canCarryItem
+    end
+
+    MBLFunctions["canCarryWeapons"] = function(source, weapon, count)
+        local xPlayer        = TPZ.GetPlayer(source)
+        local canCarryWeapon = xPlayer.canCarryWeapon(source, weapon) -- count always 1
+        return canCarryWeapon
+    end
+
+    MBLFunctions["getItemByName"] = function(source, item)
+        local item = exports.tpz_inventory:getInventoryAPI().getItemData(item) -- returns item data?
+        return item
+    end
+
+    MBLFunctions["getInventory"] = function(source)
+        local xPlayer  = TPZ.GetPlayer(source)
+        local contents = xPlayer.getInventoryContents()
+        return contents
+    end
+
+    MBLFunctions["getItemCount"] = function(source, item)
+        local xPlayer      = TPZ.GetPlayer(source)
+        local itemQuantity = xPlayer.getItemQuantity(item)
+        return itemQuantity
+    end
+
+    MBLFunctions["getItem"] = function(source, item)
+        local item = exports.tpz_inventory:getInventoryAPI().getItemData(item) -- returns item data?
+        return item
+    end
+
+    MBLFunctions["notify"] = function(source, message, duration)
+        return TPZ.NotifyCenter(source, message, duration)
+    end
+    
+    MBLFunctions["getPlayer"] = function(source)
+        local xPlayer = TPZ.GetPlayer(source)
+         
+        if not xPlayer.loaded() then return end -- is player in session?
+        return xPlayer
+    end
+
+    MBLFunctions["getIdentifier"] = function(source)
+        local xPlayer = TPZ.GetPlayer(source)
+         
+        if not xPlayer.loaded() then return end -- is player in session?
+        return xPlayer.getIdentifier()
+    end
+
+    MBLFunctions["getGroup"] = function(source)
+        local xPlayer = TPZ.GetPlayer(source)
+         
+        if not xPlayer.loaded() then return end -- is player in session?
+        return xPlayer.getGroup()
+    end
+
+    -- job
+    MBLFunctions["getJob"] = function(source)
+        local xPlayer = TPZ.GetPlayer(source)
+         
+        if not xPlayer.loaded() then return end -- is player in session?
+        return xPlayer.getJob()
+    end
+
+    --@jobgrade
+    MBLFunctions["getJobGrade"] = function(source)
+        local xPlayer = TPZ.GetPlayer(source)
+         
+        if not xPlayer.loaded() then return end -- is player in session?
+        return xPlayer.getJobGrade()
+    end
+    
+    -- gold
+    MBLFunctions["getGold"] = function(source)
+        local xPlayer = TPZ.GetPlayer(source)
+         
+        if not xPlayer.loaded() then return 0 end -- is player in session?
+        return xPlayer.getAccount(1)
+    end
+
+    --rol
+    MBLFunctions["getRol"] = function(source)
+        -- n/a
+        return 0
+    end
+
+    -- firstname
+    MBLFunctions["getFirstname"] = function(source)
+        local xPlayer = TPZ.GetPlayer(source)
+         
+        if not xPlayer.loaded() then return end -- is player in session?
+        return xPlayer.getFirstName()
+    end
+    -- lastname
+    MBLFunctions["getLastname"] = function(source)
+        local xPlayer = TPZ.GetPlayer(source)
+         
+        if not xPlayer.loaded() then return end -- is player in session?
+        return xPlayer.getLastName()
+    end
+    -- fullname
+    MBLFunctions["getFullname"] = function(source)
+        local xPlayer = TPZ.GetPlayer(source)
+         
+        if not xPlayer.loaded() then return end -- is player in session?
+        return xPlayer.getFirstName() .. ' ' .. xPlayer.getLastName()
+    end
+
+    --isDead 
+    MBLFunctions["isdead"] = function(source)
+        local xPlayer = TPZ.GetPlayer(source)
+         
+        if not xPlayer.loaded() then return end -- is player in session?
+        return xPlayer.isDead()
+    end
+
+    --age
+    MBLFunctions["getAge"] = function(source)
+        return 0
+    end
+    
+    --gender
+    MBLFunctions["getGender"] = function(source)
+        local xPlayer = TPZ.GetPlayer(source)
+         
+        if not xPlayer.loaded() then return end -- is player in session?
+        return xPlayer.getGender()
+    end
+
+    --getuserbycid
+    MBLFunctions["getUserByCid"] = function(cid)
+        -- n/a
+        return nil
+    end
+    --SetJob
+    
+    MBLFunctions["setJob"] = function(source, job, grade)
+        local xPlayer = TPZ.GetPlayer(source)
+         
+        if not xPlayer.loaded() then return end -- is player in session?
+
+        xPlayer.setJob(job)
+
+        if grade then
+            xPlayer.setJobGrade(grade)
+        end
+
+        return true
+    end
+
+    --SetJobGrade
+    MBLFunctions["setJobGrade"] = function(source, grade)
+        local xPlayer = TPZ.GetPlayer(source)
+         
+        if not xPlayer.loaded() then return end -- is player in session?
+        return  xPlayer.setJobGrade(grade)
+    end
+
+    --setgroup
+    MBLFunctions["setGroup"] = function(source, group)
+        local xPlayer = TPZ.GetPlayer(source)
+         
+        if not xPlayer.loaded() then return end -- is player in session?
+        return xPlayer.setGroup(group)
+    end
+
+    --setrol
+    MBLFunctions["setRol"] = function(source, rol)
+        -- n/a
+        return true
+    end
+
+    --addcurrency
+    MBLFunctions["addCurrency"] = function(source, currency, amount)
+        local xPlayer = TPZ.GetPlayer(source)
+         
+        if not xPlayer.loaded() then return end -- is player in session?
+
+        --The currency type (0 = money, 1 = gold, 2 = black money)
+        xPlayer.addAccount(currency, amount)
+        return true
+    end
+
+    MBLFunctions["removeCurrency"] = function(source, currency, amount)
+        local xPlayer = TPZ.GetPlayer(source)
+         
+        if not xPlayer.loaded() then return end -- is player in session?
+
+        --The currency type (0 = money, 1 = gold, 2 = black money)
+        xPlayer.removeAccount(currency, amount)
+        return true
+    end
+    
+    CASFWLibs = true
+end
 
 exports("MBLFunctions", function()
     while not CASFWLibs do Wait(0) end
