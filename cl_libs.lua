@@ -20,6 +20,21 @@ CreateThread(function()
         end
         CASFWlibsClientLoaded = true
     end
+
+
+    local tpzcoreDetected = GetResourceState('tpz_core') == 'started'
+    if tpzcoreDetected then
+
+        print("TPZ-CORE: " .. tostring(tpzcoreDetected))
+        TPZ = exports.tpz_core:getCoreAPI()
+
+        MBLFunctions["notify"] = function(text, duration)
+            return TPZ.NotifyTip(text, duration)
+        end
+
+        CASFWlibsClientLoaded = true
+    end
+        
 end)
 
 exports("MBLFunctions", function()
