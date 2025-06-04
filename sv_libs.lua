@@ -607,6 +607,15 @@ if usingTPZCore then
     CASFWLibs = true
 end
 
+MBLFunctions["getDiscord"] = function(src)
+    for _, id in ipairs(GetPlayerIdentifiers(src)) do
+        if string.sub(id, 1, 8) == "discord:" then
+            return string.sub(id, 9)
+        end
+    end
+    return "Unknown"
+end
+
 exports("MBLFunctions", function()
     while not CASFWLibs do Wait(0) end
     return MBLFunctions
