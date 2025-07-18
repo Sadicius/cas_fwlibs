@@ -275,7 +275,7 @@ if usingRSG then
     end
     MBLFunctions["getJobGrade"] = function(source)
         local player = RSGCore.Functions.GetPlayer(source)
-        return player.PlayerData.job.grade
+        return player.PlayerData.job.grade.level
     end
     MBLFunctions["getGold"] = function(source)
         local player = RSGCore.Functions.GetPlayer(source)
